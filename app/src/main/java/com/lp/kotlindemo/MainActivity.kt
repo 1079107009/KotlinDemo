@@ -60,15 +60,44 @@ class MainActivity : AppCompatActivity() {
             println(array[i])
         }
         //4.
-        val i = 0
-        when (i < array.size) {
-            println(array[i])
+//        val i = 0
+//        when (i < array.size) {
+//            println(i)
+//        }
+
+        //@定义label，一般用在内层循环中跳到外层循环:i in 0..2等价于java中 for（int i=0;i<=2;i++）效果
+        loop@ for (i in 0..2) {
+            for (i in 0..3) {
+                println(i)
+                if (i == 2){}
+//                    break@loop //跳到外层循环label处，跳出改层循环
+//                    continue@loop  //跳到外层循环，继续往下执行
+            }
         }
+
+        //倒序输出5 4 3 2 1 0
+        for (i in 5 downTo 0){
+            println(i)
+        }
+
+        //设置输出数据步长
+        for (i in 0..5 step 3){
+            println(i)  // 输出 14
+        }
+
+        //step和downTo混合使用
+        for (i in 5 downTo 0 step 3 ) println(i) //输出52
     }
 
     fun whenFun(obj: Any) {
         when (obj) {
-
+            25 -> println("25")
+            "kotlin" -> println("kotlin")
+            is String -> print("is String")
+            !is String -> println("not String")
+            else -> println("nothing")
         }
     }
+
+
 }
