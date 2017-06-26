@@ -1,7 +1,11 @@
-package com.lp.kotlindemo
+package com.lp.kotlindemo.ui.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import com.lp.kotlindemo.R
+import com.lp.kotlindemo.ui.adapters.ForecastListAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -9,25 +13,37 @@ class MainActivity : AppCompatActivity() {
     val sArray: Array<String> = Array(3, { i -> i.toString() })
     val anyArray: Array<Any> = arrayOf(1, "2", 3.0, 4f)
     val lArray: LongArray = longArrayOf(1L, 2L, 3L)
+    private val items = listOf(
+            "Mon 6/23 - Sunny - 31/17",
+            "Tue 6/24 - Foggy - 21/8",
+            "Wed 6/25 - Cloudy - 22/17",
+            "Thurs 6/26 - Rainy - 18/11",
+            "Fri 6/27 - Foggy - 21/10",
+            "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
+            "Sun 6/29 - Sunny - 20/7"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val forecastList = findViewById(R.id.forecast_list) as RecyclerView
+        forecastList.layoutManager = LinearLayoutManager(this)
+        forecastList.adapter = ForecastListAdapter(items)
     }
 
     override fun onResume() {
         super.onResume()
-        println(sum1(iArray[0], iArray[1]))
-        println(max2(11, 22))
-        var a: Int = 4
-        var shl: Int = a shl (1) //左移运算符<<
-        var shr: Int = a shr (2) //右移运算符>>
-        var ushr: Int = a ushr (3) //无符号右移，高位补0 >>>
-        var and: Int = 2 and (4)   //按位与操作 &
-        var or: Int = 2 or (4) //按位或操作 |
-        var xor: Int = 2 xor (6)  //按位异或操作 ^
-        print("\nshl:$shl\nshr:$shr \nushr:$ushr")
-        print("\nand：$and\nor:$or\nxor:$xor")
+//        println(sum1(iArray[0], iArray[1]))
+//        println(max2(11, 22))
+//        var a: Int = 4
+//        var shl: Int = a shl (1) //左移运算符<<
+//        var shr: Int = a shr (2) //右移运算符>>
+//        var ushr: Int = a ushr (3) //无符号右移，高位补0 >>>
+//        var and: Int = 2 and (4)   //按位与操作 &
+//        var or: Int = 2 or (4) //按位或操作 |
+//        var xor: Int = 2 xor (6)  //按位异或操作 ^
+//        print("\nshl:$shl\nshr:$shr \nushr:$ushr")
+//        print("\nand：$and\nor:$or\nxor:$xor")
     }
 
     fun sum1(a: Int, b: Int): Int {
@@ -69,24 +85,25 @@ class MainActivity : AppCompatActivity() {
         loop@ for (i in 0..2) {
             for (i in 0..3) {
                 println(i)
-                if (i == 2){}
+                if (i == 2) {
+                }
 //                    break@loop //跳到外层循环label处，跳出改层循环
 //                    continue@loop  //跳到外层循环，继续往下执行
             }
         }
 
         //倒序输出5 4 3 2 1 0
-        for (i in 5 downTo 0){
+        for (i in 5 downTo 0) {
             println(i)
         }
 
         //设置输出数据步长
-        for (i in 0..5 step 3){
+        for (i in 0..5 step 3) {
             println(i)  // 输出 14
         }
 
         //step和downTo混合使用
-        for (i in 5 downTo 0 step 3 ) println(i) //输出52
+        for (i in 5 downTo 0 step 3) println(i) //输出52
     }
 
     fun whenFun(obj: Any) {
