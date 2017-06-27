@@ -34,13 +34,14 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
     val zipCode: Long by DelegatesExt.preference(this, SettingsActivity.ZIP_CODE,
             SettingsActivity.DEFAULT_ZIP)
     override val toolbar by lazy { find<Toolbar>(R.id.toolbar) }
-    val forecastList by lazy { find<RecyclerView>(R.id.forecast_list) }
+
+    var forecastList: RecyclerView by DelegatesExt.notNullSingleValue()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initToolbar()
-
+        forecastList = find(R.id.forecast_list)
         forecastList.layoutManager = LinearLayoutManager(this)
         attachToScroll(forecastList)
     }
