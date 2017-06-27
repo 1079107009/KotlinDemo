@@ -1,10 +1,10 @@
 package com.lp.kotlindemo.domain.datasource
 
-import com.antonioleiva.weatherapp.extensions.firstResult
 import com.lp.kotlindemo.data.db.ForecastDb
 import com.lp.kotlindemo.data.server.ForecastServer
 import com.lp.kotlindemo.domain.model.Forecast
 import com.lp.kotlindemo.domain.model.ForecastList
+import com.lp.kotlindemo.extensions.firstResult
 
 /**
  * Created by LiPin on 2017/6/26 14:18.

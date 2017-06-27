@@ -1,8 +1,8 @@
 package com.lp.kotlindemo.data.db
 
-import com.antonioleiva.weatherapp.extensions.*
 import com.lp.kotlindemo.domain.datasource.ForecastDataSource
 import com.lp.kotlindemo.domain.model.ForecastList
+import com.lp.kotlindemo.extensions.*
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 import java.util.*

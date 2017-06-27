@@ -4,10 +4,19 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import com.lp.kotlindemo.R
+import com.lp.kotlindemo.domain.commands.RequestForecastCommand
+import com.lp.kotlindemo.domain.model.ForecastList
+import com.lp.kotlindemo.extensions.DelegatesExt
 import com.lp.kotlindemo.ui.adapters.ForecastListAdapter
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.find
+import org.jetbrains.anko.startActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ToolbarManager {
 
     val iArray: IntArray = intArrayOf(1, 2, 3)
     val sArray: Array<String> = Array(3, { i -> i.toString() })
@@ -22,13 +31,18 @@ class MainActivity : AppCompatActivity() {
             "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
             "Sun 6/29 - Sunny - 20/7"
     )
+    val zipCode: Long by DelegatesExt.preference(this, SettingsActivity.ZIP_CODE,
+            SettingsActivity.DEFAULT_ZIP)
+    override val toolbar by lazy { find<Toolbar>(R.id.toolbar) }
+    val forecastList by lazy { find<RecyclerView>(R.id.forecast_list) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val forecastList = findViewById(R.id.forecast_list) as RecyclerView
+        initToolbar()
+
         forecastList.layoutManager = LinearLayoutManager(this)
-        forecastList.adapter = ForecastListAdapter(items)
+        attachToScroll(forecastList)
     }
 
     override fun onResume() {
@@ -44,6 +58,21 @@ class MainActivity : AppCompatActivity() {
 //        var xor: Int = 2 xor (6)  //按位异或操作 ^
 //        print("\nshl:$shl\nshr:$shr \nushr:$ushr")
 //        print("\nand：$and\nor:$or\nxor:$xor")
+        loadForecast()
+    }
+
+    private fun loadForecast() = async(UI) {
+        val result = bg { RequestForecastCommand(zipCode).execute() }
+        updateUI(result.await())
+    }
+
+    private fun updateUI(weekForecast: ForecastList) {
+        val adapter = ForecastListAdapter(weekForecast) {
+            startActivity<DetailActivity>(DetailActivity.ID to it.id,
+                    DetailActivity.CITY_NAME to weekForecast.city)
+        }
+        forecastList.adapter = adapter
+        toolbarTitle = "${weekForecast.city} (${weekForecast.country})"
     }
 
     fun sum1(a: Int, b: Int): Int {
