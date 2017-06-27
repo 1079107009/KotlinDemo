@@ -24,6 +24,7 @@ class ServerDataMapper {
         return list.mapIndexed { i, forecast ->
             val dt = Calendar.getInstance().timeInMillis + TimeUnit.DAYS.toMillis(i.toLong())
             convertForecastItemToDomain(forecast.copy(dt = dt))
+            //如上，我们拷贝了forecast对象然后只修改了dt的属性而没有修改这个对象的其它状态。
         }
     }
 

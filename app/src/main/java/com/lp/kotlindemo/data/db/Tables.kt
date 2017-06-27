@@ -2,7 +2,7 @@ package com.lp.kotlindemo.data.db
 
 /**
  * Created by LiPin on 2017/6/26 15:52.
- * 描述：
+ * 描述：定义表
  */
 object CityForecastTable {
     val NAME = "CityForecast"

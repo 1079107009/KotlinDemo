@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
 
 /**
  * Created by LiPin on 2017/6/26 14:59.
- * 描述：
+ * 描述：委托属性
  */
 object DelegatesExt {
     fun <T> notNullSingleValue() = NotNullSingleValueVar<T>()

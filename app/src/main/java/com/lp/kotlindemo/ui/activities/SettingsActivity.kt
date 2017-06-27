@@ -15,6 +15,7 @@ class SettingsActivity : AppCompatActivity() {
         val DEFAULT_ZIP = 94043L
     }
 
+    //使用by这个关键字来指定一个委托对象
     var zipCode: Long by DelegatesExt.preference(this, ZIP_CODE, DEFAULT_ZIP)
 
     override fun onCreate(savedInstanceState: Bundle?) {

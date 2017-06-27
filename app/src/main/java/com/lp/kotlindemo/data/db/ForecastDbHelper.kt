@@ -15,6 +15,13 @@ class ForecastDbHelper(ctx: Context = App.instance) : ManagedSQLiteOpenHelper(ct
     companion object {
         val DB_NAME = "forecast.db"
         val DB_VERSION = 1
+        /**
+         * instance这个属性使用了lazy委托，它表示直到它真的被调用才会被创建。
+         * 用这种方法，如果数据库从来没有被使用，我们没有必要去创建这个对象。
+         * 一般lazy委托的代码块可以阻止在多个不同的线程中创建多个对象。
+         * 这个只会发生在两个线程在同事时间访问这个instance对象，它很难发生但是发生具体还有看app的实现。
+         * 无论如何，lazy委托是线程安全的
+         */
         val instance by lazy { ForecastDbHelper() }
     }
 

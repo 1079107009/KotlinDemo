@@ -3,13 +3,14 @@ package com.lp.kotlindemo.ui.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import com.lp.kotlindemo.R
 import com.lp.kotlindemo.domain.commands.RequestForecastCommand
 import com.lp.kotlindemo.domain.model.ForecastList
 import com.lp.kotlindemo.extensions.DelegatesExt
 import com.lp.kotlindemo.ui.adapters.ForecastListAdapter
+//1.我们需要使用的import语句以kotlin.android.synthetic.main开头，然后加上我们要绑定到Activity的布局XML的名字
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
     val sArray: Array<String> = Array(3, { i -> i.toString() })
     val anyArray: Array<Any> = arrayOf(1, "2", 3.0, 4f)
     val lArray: LongArray = longArrayOf(1L, 2L, 3L)
+    //还有很多其它的函数可以选择，比如setOf，arrayListOf或者hashSetOf。
     private val items = listOf(
             "Mon 6/23 - Sunny - 31/17",
             "Tue 6/24 - Foggy - 21/8",
@@ -33,15 +35,21 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
     )
     val zipCode: Long by DelegatesExt.preference(this, SettingsActivity.ZIP_CODE,
             SettingsActivity.DEFAULT_ZIP)
+    /**
+     * lazy:
+     * 它包含一个lambda，当第一次执行getValue的时候这个lambda会被调用，所以这个属性可以被延迟初始化。
+     * 之后的调用都只会返回同一个值。这是非常有趣的特性， 当我们在它们第一次真正调用之前不是必须需要它们的时候。
+     * 我们可以节省内存，在这些属性真正需要前不进行初始化。
+     * 在这个例子中，toolbar并没有被真正初始化，直到第一次调用onCreate时。
+     * 在那之后，我们才确保Activity存在，并且已经准备好可以被使用了。lazy操作符是线程安全的。
+     */
     override val toolbar by lazy { find<Toolbar>(R.id.toolbar) }
-
-    var forecastList: RecyclerView by DelegatesExt.notNullSingleValue()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initToolbar()
-        forecastList = find(R.id.forecast_list)
+        //2.此后，我们就可以在setContentView被调用后访问这些view。
         forecastList.layoutManager = LinearLayoutManager(this)
         attachToScroll(forecastList)
     }
@@ -62,6 +70,10 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
         loadForecast()
     }
 
+    /**
+     *  Anko提供了非常简单的DSL来处理异步任务，它满足大部分的需求。
+     * 它提供了一个基本的async函数用于在其它线程执行代码，也可以选择通过调用uiThread的方式回到主线程。
+     */
     private fun loadForecast() = async(UI) {
         val result = bg { RequestForecastCommand(zipCode).execute() }
         updateUI(result.await())
